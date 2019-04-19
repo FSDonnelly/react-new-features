@@ -4,22 +4,42 @@ import * as serviceWorker from './serviceWorker';
 
 // { count: 0, name: '' }
 
-const App = () => {
-    const [count, setCount] = useState(15)
+// Challenge
+// 1. Allow initial count to be configured using a count prop (default to 0)
+// 2. Add -1 button to reduce count by 1
+// 3. Add reset button to reset count 
+// 4. Test your work
 
-    const increment = () =>{
+const App = (props) => {
+    const [count, setCount] = useState(props.count)
+
+    const increment = () => {
         setCount(count + 1)
+    }
+
+    const decrement = () => {
+        setCount(count - 1)
+    }
+
+    const reset = () => {
+        setCount(props.count)
     }
 
     return (
         <div>
             <p>The Current Count is {count}</p>
             <button onClick={increment}>+1</button>
+            <button onClick={decrement}>-1</button>
+            <button onClick={reset}>Reset</button>
         </div>
     )
 };
 
-ReactDOM.render(<App />, document.getElementById('root'));
+App.defaultProps = {
+    count: 0
+}
+
+ReactDOM.render(<App count={2}/>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

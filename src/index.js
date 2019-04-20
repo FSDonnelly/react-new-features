@@ -2,44 +2,46 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 
-// { count: 0, name: '' }
+const NoteApp = () => {
+    const [notes, setNotes] = useState([])
+    const [title, setTitle] = useState('')
+    const [body, setBody] = useState('')
 
-// Challenge
-// 1. Allow initial count to be configured using a count prop (default to 0)
-// 2. Add -1 button to reduce count by 1
-// 3. Add reset button to reset count 
-// 4. Test your work
-
-const App = (props) => {
-    const [count, setCount] = useState(props.count)
-
-    const increment = () => {
-        setCount(count + 1)
+    const addNote = (e) => {
+        e.preventDefault()
+        setNotes([
+            ...notes,
+            { title, body }
+        ])
+        setTitle('')
+        setBody('')
     }
 
-    const decrement = () => {
-        setCount(count - 1)
-    }
-
-    const reset = () => {
-        setCount(props.count)
+    const removeNote = (title) => {
+        setNotes(notes.filter((note) => note.title !== title))
     }
 
     return (
         <div>
-            <p>The Current Count is {count}</p>
-            <button onClick={increment}>+1</button>
-            <button onClick={decrement}>-1</button>
-            <button onClick={reset}>Reset</button>
+            <h1>Notes</h1>
+            {notes.map((note) => (
+                <div key={note.title}>
+                    <li>{note.title}</li>
+                    <p>{note.body}</p>
+                    <button onClick={() => removeNote(note.title)}>x</button>
+                </div>
+            ))}
+            <p>Add Note</p>
+            <form onSubmit={addNote}>
+                <input value={title} onChange={(e) => setTitle(e.target.value)} />
+                <textarea value={body} onChange={(e) => setBody(e.target.value)}></textarea>
+                <button >Submit</button>
+            </form>
         </div>
     )
-};
-
-App.defaultProps = {
-    count: 0
 }
 
-ReactDOM.render(<App count={2}/>, document.getElementById('root'));
+ReactDOM.render(<NoteApp />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

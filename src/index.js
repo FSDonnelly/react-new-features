@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 
 const NoteApp = () => {
-    const [notes, setNotes] = useState([])
+    const notesData = JSON.parse(localStorage.getItem('notes'))
+    const [notes, setNotes] = useState(notesData || [])
     const [title, setTitle] = useState('')
     const [body, setBody] = useState('')
 
@@ -20,6 +21,10 @@ const NoteApp = () => {
     const removeNote = (title) => {
         setNotes(notes.filter((note) => note.title !== title))
     }
+
+    useEffect(() => {
+        localStorage.setItem('notes', JSON.stringify(notes))
+    })
 
     return (
         <div>
@@ -39,6 +44,42 @@ const NoteApp = () => {
             </form>
         </div>
     )
+}
+
+const App = (props) => {
+    const [count, setCount] = useState(props.count)
+    const [text, setText] =  useState('')
+
+    useEffect(() => {
+        console.log('useEffect ran')
+        document.title = count
+    })
+
+    const increment = () => {
+        setCount(count + 1)
+    }
+
+    const decrement = () => {
+        setCount(count - 1)
+    }
+
+    const reset = () => {
+        setCount(props.count)
+    }
+
+    return (
+        <div>
+            <p>The Current {text || 'Count'} is {count}</p>
+            <button onClick={increment}>+1</button>
+            <button onClick={decrement}>-1</button>
+            <button onClick={reset}>Reset</button> 
+            <input value={text} onChange={(e) => setText(e.target.value)} />
+        </div>
+    )
+};
+
+App.defaultProps = {
+    count: 0
 }
 
 ReactDOM.render(<NoteApp />, document.getElementById('root'));

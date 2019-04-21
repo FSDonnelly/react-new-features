@@ -51,9 +51,13 @@ const App = (props) => {
     const [text, setText] =  useState('')
 
     useEffect(() => {
+        console.log('This should only run once!')
+    }, [])
+
+    useEffect(() => {
         console.log('useEffect ran')
         document.title = count
-    })
+    }, [count])
 
     const increment = () => {
         setCount(count + 1)
@@ -82,7 +86,7 @@ App.defaultProps = {
     count: 0
 }
 
-ReactDOM.render(<NoteApp />, document.getElementById('root'));
+ReactDOM.render(<App count={0} />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

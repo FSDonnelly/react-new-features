@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 
@@ -10,32 +10,41 @@ import * as serviceWorker from './serviceWorker';
 // 3. Add reset button to reset count 
 // 4. Test your work
 
-// const App = (props) => {
-//     const [count, setCount] = useState(props.count)
-//     const [text, setText] =  useState('')
+const App = (props) => {
+    const [count, setCount] = useState(props.count)
+    const [text, setText] = useState('')
 
-//     const increment = () => {
-//         setCount(count + 1)
-//     }
+    useEffect(() => {
+        console.log('This should only run once!')
+    }, [])
 
-//     const decrement = () => {
-//         setCount(count - 1)
-//     }
+    useEffect(() => {
+        console.log('useEffect ran')
+        document.title = count
+    }, [count])
 
-//     const reset = () => {
-//         setCount(props.count)
-//     }
+    const increment = () => {
+        setCount(count + 1)
+    }
 
-//     return (
-//         <div>
-//             <p>The Current {text || 'Count'} is {count}</p>
-//             <button onClick={increment}>+1</button>
-//             <button onClick={decrement}>-1</button>
-//             <button onClick={reset}>Reset</button> 
-//             <input value={text} onChange={(e) => setText(e.target.value)} />
-//         </div>
-//     )
-// };
+    const decrement = () => {
+        setCount(count - 1)
+    }
+
+    const reset = () => {
+        setCount(props.count)
+    }
+
+    return (
+        <div>
+            <p>The Current {text || 'Count'} is {count}</p>
+            <button onClick={increment}>+1</button>
+            <button onClick={decrement}>-1</button>
+            <button onClick={reset}>Reset</button>
+            <input value={text} onChange={(e) => setText(e.target.value)} />
+        </div>
+    )
+};
 
 App.defaultProps = {
     count: 0

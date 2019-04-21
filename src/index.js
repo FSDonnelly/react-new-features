@@ -3,8 +3,7 @@ import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 
 const NoteApp = () => {
-    const notesData = JSON.parse(localStorage.getItem('notes'))
-    const [notes, setNotes] = useState(notesData || [])
+    const [notes, setNotes] = useState([])
     const [title, setTitle] = useState('')
     const [body, setBody] = useState('')
 
@@ -23,18 +22,22 @@ const NoteApp = () => {
     }
 
     useEffect(() => {
+        const notesData = JSON.parse(localStorage.getItem('notes'))
+
+        if (notesData) {
+            setNotes(notesData)
+        }
+    }, [])
+
+    useEffect(() => {
         localStorage.setItem('notes', JSON.stringify(notes))
-    })
+    }, [notes])
 
     return (
         <div>
             <h1>Notes</h1>
             {notes.map((note) => (
-                <div key={note.title}>
-                    <li>{note.title}</li>
-                    <p>{note.body}</p>
-                    <button onClick={() => removeNote(note.title)}>x</button>
-                </div>
+                <Note key={note.title} note={note} removeNote={removeNote} />
             ))}
             <p>Add Note</p>
             <form onSubmit={addNote}>
@@ -46,47 +49,25 @@ const NoteApp = () => {
     )
 }
 
-const App = (props) => {
-    const [count, setCount] = useState(props.count)
-    const [text, setText] =  useState('')
-
+const Note = ({ note, removeNote }) => {
     useEffect(() => {
-        console.log('This should only run once!')
+        console.log('Setting up effect!')
+
+        return () => {
+            console.log('Cleaning up effect!')
+        }
     }, [])
-
-    useEffect(() => {
-        console.log('useEffect ran')
-        document.title = count
-    }, [count])
-
-    const increment = () => {
-        setCount(count + 1)
-    }
-
-    const decrement = () => {
-        setCount(count - 1)
-    }
-
-    const reset = () => {
-        setCount(props.count)
-    }
 
     return (
         <div>
-            <p>The Current {text || 'Count'} is {count}</p>
-            <button onClick={increment}>+1</button>
-            <button onClick={decrement}>-1</button>
-            <button onClick={reset}>Reset</button> 
-            <input value={text} onChange={(e) => setText(e.target.value)} />
+            <li>{note.title}</li>
+            <p>{note.body}</p>
+            <button onClick={() => removeNote(note.title)}>x</button>
         </div>
     )
-};
-
-App.defaultProps = {
-    count: 0
 }
 
-ReactDOM.render(<App count={0} />, document.getElementById('root'));
+ReactDOM.render(<NoteApp />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
